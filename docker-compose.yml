@@ -37,6 +37,8 @@ services:
       PGADMIN_DEFAULT_EMAIL: test@example.com
       PGADMIN_DEFAULT_PASSWORD: postgres
       PGADMIN_LISTEN_PORT: 5052
+    volumes:
+      - ./pgadmin:/var/lib/pgadmin
     ports:
     - 5052:5052
     networks:
