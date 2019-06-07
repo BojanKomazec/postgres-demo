@@ -1,0 +1,44 @@
+version: '3.7'
+
+networks:
+  postgres-demo:
+    name: postgres-demo-net
+    ipam:
+      driver: default
+      config:
+        - subnet: 172.16.239.0/24
+
+services:
+
+  pg_db:
+    image: postgres
+    container_name: postgres-demo-pg
+    volumes:
+      - ./database_data:/var/lib/postgresql/data
+    ports:
+      - 5432:5432
+    environment:
+      POSTGRES_DB: $PGDATABASE
+      POSTGRES_USER: $PGUSER
+      POSTGRES_PASSWORD: $PGPASSWORD
+    stdin_open: true
+    tty: true
+    networks:
+      postgres-demo:
+        ipv4_address: 172.16.239.2
+
+  pg_admin:
+    image: dpage/pgadmin4
+    container_name: postgres-demo-pgadmin
+    depends_on:
+      - pg_db
+    restart: always
+    environment:
+      PGADMIN_DEFAULT_EMAIL: test@example.com
+      PGADMIN_DEFAULT_PASSWORD: postgres
+      PGADMIN_LISTEN_PORT: 5052
+    ports:
+    - 5052:5052
+    networks:
+      postgres-demo:
+        ipv4_address: 172.16.239.3
